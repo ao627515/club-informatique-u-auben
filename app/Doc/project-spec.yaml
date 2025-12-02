@@ -1,0 +1,163 @@
+project:
+  name: Club Informatique Université Aube Nouvelle
+  tech_stack:
+    backend: Laravel 12
+    frontend: Livewire 3
+    css: BEM
+    libraries:
+      - spatie/laravel-permission
+      - spatie/laravel-medialibrary
+      - spatie/laravel-activitylog
+      - spatie/laravel-data
+  architecture:
+    pattern: MVC + Service + Repository
+    dto: Laravel Data Objects
+    conventions:
+      naming: english for classes, methods, variables
+      comments: french
+      method_single_action: true
+      reuse_existing_methods: true
+
+roles:
+  visitor:
+    description: Non connecté, consulte pages publiques
+    permissions: view_public_pages, view_candidates
+  user:
+    description: Inscrit et authentifié
+    permissions: vote, participate_activities, update_profile
+  candidate:
+    description: Utilisateur ayant candidature validée
+    permissions:
+      - candidate.apply
+      - candidate.update_profile
+      - candidate.view_status
+      - candidate.dashboard_access
+  admin:
+    description: Gère toute la plateforme
+    permissions:
+      - manage_users
+      - manage_candidates
+      - manage_votes
+      - manage_activities
+      - manage_mandates
+      - manage_roles
+      - view_activity_logs
+
+colors:
+  primary_white: "#FEFEFE"
+  dark_gray: "#242423"
+  red_cta: "#E00514"
+  dark_blue: "#2D256D"
+  light_blue: "#009FE3"
+
+pages:
+  public:
+    - home:
+        description: Hero section, apercu activités, mandat, CTA
+        components:
+          - HeroBanner
+          - ActivitiesPreview
+          - MandatePreview
+    - about:
+        description: Histoire, vision, mission, équipe
+    - mandate:
+        description: Phase1 static, Phase2 dynamique future
+    - activities:
+        description: Phase1 static, Phase2 CRUD via admin
+    - candidates:
+        description: Liste candidats validés, fiche candidate
+  user:
+    - registration:
+        description: Formulaire inscription utilisateur, upload photo
+    - login:
+        description: Login Livewire, mot de passe oublié
+  candidate:
+    - registration:
+        description: Formulaire candidature, photo, programme, vision
+        priority: 1
+        components: [RegisterCandidateForm, CandidateDocumentUpload]
+    - dashboard:
+        description: Statut candidature, édition profil candidat, historique actions
+  voting:
+    - vote_page:
+        description: Accessible users only, un vote par utilisateur, résultats après période
+  admin:
+    - dashboard:
+        modules:
+          - manage_users
+          - manage_candidates
+          - manage_votes
+          - manage_activities
+          - manage_mandates
+          - manage_roles
+          - activity_logs
+
+user_stories:
+  visitor:
+    - voir_accueil
+    - voir_candidats_public
+    - s_inscrire_utilisateur
+  user:
+    - inscrire_utilisateur
+    - se_connecter
+    - voter_candidat
+    - consulter_activites
+  candidate:
+    - soumettre_candidature
+    - voir_statut_candidature
+    - modifier_profil_candidat
+    - consulter_fiche_publique
+  admin:
+    - valider_candidature
+    - rejeter_candidature
+    - gérer_utilisateurs
+    - gérer_activites
+    - gérer_mandats
+    - consulter_logs
+
+priorities:
+  - priority_1:
+      features:
+        - candidate_registration
+        - admin_auth_and_candidate_access
+        - assign_candidate_role
+      deadline: today
+  - priority_2:
+      features:
+        - static_pages: [home, about, mandate, activities]
+        - candidates_public_page
+      deadline: 2025-12-10
+  - priority_3:
+      features:
+        - voting_page
+        - user_registration_login
+        - full_admin_dashboard
+        - dynamic_mandate_activities
+      deadline: after_2025-12-10
+
+architecture_details:
+  livewire_components:
+    guidelines:
+      - parent_component_per_page
+      - child_component_per_functionality
+      - css_bem_classing
+  service_layer:
+    guidelines:
+      - call_repository_methods
+      - one_method_one_action
+      - french_comments
+  repository_layer:
+    guidelines:
+      - one_method_one_action
+      - reuse_existing_methods
+      - access_database_only
+  dto:
+    guidelines:
+      - validation_rules
+      - transformation
+      - communication_controller_service_repo
+  css_guidelines:
+    - use_logo_colors
+    - hover_variation_light
+    - responsive_mobile_first
+    - modern_sans_serif_typography
