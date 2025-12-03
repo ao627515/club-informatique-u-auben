@@ -255,10 +255,10 @@
 
                             <!-- Navigation étape 1 -->
                             <div class="candidate-register__step-actions">
-                                {{-- <a href="{{ route('home') }}" class="btn btn--ghost btn--lg">
+                                <a href="{{ route('home') }}" class="btn btn--ghost btn--lg">
                                     <i class="fa-solid fa-arrow-left"></i>
                                     Retour
-                                </a> --}}
+                                </a>
                                 <button type="button" wire:click="nextStep" class="btn btn--primary btn--lg">
                                     <span>Continuer</span>
                                     <i class="fa-solid fa-arrow-right"></i>

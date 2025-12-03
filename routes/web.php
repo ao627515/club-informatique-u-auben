@@ -6,11 +6,13 @@ use App\Livewire\Candidate\RegisterPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// })->name('home');
+Route::get('/', function () {
+    return redirect('/candidature');
+})->name('home');
 
 Route::redirect('/', '/candidature');
+
+// Route::redire
 
 // Route candidature (accessible sans authentification)
 Route::get('/candidature', RegisterPage::class)
