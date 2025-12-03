@@ -183,6 +183,8 @@
     gap: 0;
     margin-bottom: var(--spacing-xl);
     padding: var(--spacing-md) 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     animation: slideDown 0.6s ease-out 0.2s backwards;
 }
 
@@ -1007,4 +1009,152 @@
     font-size: var(--font-size-body);
     color: var(--color-text-secondary);
     margin: 0;
+
+    /* ========================================
+       RESPONSIVE TUNING
+       ======================================== */
+
+    /* >= 1024px (desktop) : rien de spécifique pour l'instant */
+
+    /* <= 1024px */
+    @media (max-width: 1024px) {
+        .candidate-register__card {
+            padding: var(--spacing-xl);
+        }
+    }
+
+    /* <= 768px (tablette) */
+    @media (max-width: 768px) {
+        .candidate-register {
+            padding: var(--spacing-lg) 0;
+        }
+
+        .candidate-register__header-badge {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        .candidate-register__subtitle {
+            max-width: 90%;
+        }
+
+        .candidate-register__card {
+            padding: var(--spacing-lg);
+        }
+
+        .candidate-register__section-header {
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .candidate-register__section-icon {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+
+        .form-group--modern .form-group__input,
+        .form-group--modern .form-group__textarea {
+            padding: 12px 14px;
+            font-size: 0.95rem;
+        }
+
+        .candidate-register__upload-zone {
+            padding: var(--spacing-lg);
+        }
+
+        .candidate-register__upload-icon {
+            font-size: 2.25rem;
+        }
+    }
+
+    /* <= 576px (mobile) */
+    @media (max-width: 576px) {
+        .candidate-register__bg-circle--1,
+        .candidate-register__bg-circle--2,
+        .candidate-register__bg-circle--3 {
+            opacity: 0.02;
+            filter: blur(2px);
+        }
+
+        .candidate-register__bg-circle--1 {
+            width: 400px;
+            height: 400px;
+            top: -160px;
+            right: -160px;
+        }
+
+        .candidate-register__bg-circle--2 {
+            width: 260px;
+            height: 260px;
+            bottom: -140px;
+            left: -120px;
+        }
+
+        .candidate-register__bg-circle--3 {
+            width: 180px;
+            height: 180px;
+            top: 55%;
+            left: 60%;
+        }
+
+        .candidate-register__progress-icon {
+            width: 38px;
+            height: 38px;
+            font-size: 0.9rem;
+        }
+
+        .candidate-register__progress-line {
+            width: 28px;
+            margin-bottom: 24px;
+        }
+
+        .candidate-register__section-title {
+            font-size: 1.25rem;
+        }
+
+        .candidate-register__upload-text-secondary {
+            font-size: 0.8rem;
+        }
+
+        .candidate-register__footer {
+            margin-top: var(--spacing-lg);
+        }
+    }
+
+    /* <= 400px (petits mobiles) */
+    @media (max-width: 400px) {
+        .candidate-register__header-badge {
+            gap: 6px;
+            padding: 6px 12px;
+        }
+
+        .candidate-register__title {
+            font-size: 1.75rem;
+        }
+
+        .candidate-register__progress {
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .candidate-register__card {
+            padding: var(--spacing-md);
+        }
+
+        .form-group--modern .form-group__input,
+        .form-group--modern .form-group__textarea {
+            padding: 10px 12px;
+            font-size: 0.9rem;
+        }
+
+        .candidate-register__upload-zone {
+            padding: var(--spacing-md);
+        }
+
+        .candidate-register__btn-content,
+        .candidate-register__btn-loading {
+            gap: 8px;
+        }
+    }
 }
