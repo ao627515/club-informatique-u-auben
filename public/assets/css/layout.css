@@ -44,18 +44,15 @@
     display: block;
     width: 36px;
     height: 36px;
-    background: linear-gradient(
-        135deg,
-        var(--color-accent-red) 0%,
-        var(--color-secondary-dark-blue) 100%
-    );
+    background: url("../imgs/logo.jpeg") no-repeat center center;
+    background-size: cover; /* Ajuste l'image pour qu'elle remplisse entièrement le conteneur */
     border-radius: var(--radius-md);
     flex-shrink: 0;
 }
 
-.header__logo-text {
+/* .header__logo-text {
     display: none;
-}
+} */
 
 @media (min-width: 768px) {
     .header__logo-text {

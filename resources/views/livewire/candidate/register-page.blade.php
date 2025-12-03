@@ -18,12 +18,13 @@
                 <span class="candidate-register__header-badge-text">Candidature ouverte</span>
             </div>
             <h1 class="candidate-register__title">
-                <span class="candidate-register__title-highlight">Rejoignez</span> le Club
+                <span class="candidate-register__title-highlight">Postulez</span> au poste de Président
             </h1>
             <p class="candidate-register__subtitle">
-                Devenez acteur du changement au sein du Club Informatique U-Auben.<br>
-                <span class="candidate-register__subtitle-emphasis">Votre vision compte.</span>
+                Prenez les rênes du Club Informatique U-Auben et portez votre vision.<br>
+                <span class="candidate-register__subtitle-emphasis">Faites la différence !</span>
             </p>
+
         </div>
 
         <!-- Indicateur de progression -->
