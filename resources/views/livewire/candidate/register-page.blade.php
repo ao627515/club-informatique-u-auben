@@ -144,7 +144,7 @@
                         </label>
                         <textarea id="vision" wire:model="vision" rows="6"
                             class="form-group__textarea @error('vision') form-group__textarea--error @enderror"
-                            placeholder="Décrivez votre vision pour le Club Informatique U-Auben (100-2000 caractères)"></textarea>
+                            placeholder="Décrivez votre vision pour le Club Informatique U-Auben (1-2000 caractères)"></textarea>
                         @error('vision')
                             <span class="form-group__error">{{ $message }}</span>
                         @enderror
@@ -163,7 +163,7 @@
                         </label>
                         <textarea id="motivations" wire:model="motivations" rows="4"
                             class="form-group__textarea @error('motivations') form-group__textarea--error @enderror"
-                            placeholder="Expliquez vos motivations (50-1000 caractères)"></textarea>
+                            placeholder="Expliquez vos motivations (1-1000 caractères)"></textarea>
                         @error('motivations')
                             <span class="form-group__error">{{ $message }}</span>
                         @enderror

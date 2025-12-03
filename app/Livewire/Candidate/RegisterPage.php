@@ -60,8 +60,8 @@ class RegisterPage extends Component
     {
         $rules = [
             // Photo officielle et programme deviennent optionnels
-            'vision' => 'required|string|min:100|max:2000',
-            'motivations' => 'required|string|min:50|max:1000',
+            'vision' => 'required|string|min:1|max:2000',
+            'motivations' => 'required|string|min:1|max:1000',
         ];
 
         // Si l'utilisateur n'est pas authentifié, ajouter les règles d'inscription
@@ -104,10 +104,10 @@ class RegisterPage extends Component
             'programme.mimes' => 'Le programme doit être au format PDF.',
             'programme.max' => 'Le programme ne doit pas dépasser 5 Mo.',
             'vision.required' => 'La vision est obligatoire.',
-            'vision.min' => 'La vision doit contenir au moins 100 caractères.',
+            'vision.min' => 'La vision doit contenir au moins 1 caractère.',
             'vision.max' => 'La vision ne doit pas dépasser 2000 caractères.',
             'motivations.required' => 'Les motivations sont obligatoires.',
-            'motivations.min' => 'Les motivations doivent contenir au moins 50 caractères.',
+            'motivations.min' => 'Les motivations doivent contenir au moins 1 caractère.',
             'motivations.max' => 'Les motivations ne doivent pas dépasser 1000 caractères.',
         ];
     }
