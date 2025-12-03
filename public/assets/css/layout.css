@@ -349,6 +349,8 @@
     gap: var(--spacing-sm);
 }
 
+/*  */
+
 .footer__title {
     font-size: 1.125rem;
     font-weight: var(--font-weight-bold);
