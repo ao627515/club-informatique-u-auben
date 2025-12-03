@@ -151,11 +151,10 @@ class RegisterPage extends Component
                 );
 
                 $candidateService->createCandidate($candidateData, $user);
-
-                session()->flash('success', 'Votre candidature a été soumise avec succès ! Elle sera examinée par un administrateur. Vous recevrez un mot de passe par email si votre candidature est retenue.');
-
-                $this->redirect(route('candidate.dashboard'), navigate: true);
             });
+
+            session()->flash('success', 'Votre candidature a été soumise avec succès ! Votre dossier est en cours de traitement par un administrateur.');
+            // On reste sur la même page, pas de redirection
         } catch (\Exception $e) {
             session()->flash('error', 'Une erreur est survenue : ' . $e->getMessage());
         }
