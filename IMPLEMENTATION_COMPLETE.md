@@ -1,4 +1,4 @@
-# 🎉 PRIORITY 1 COMPLÉTÉE - Club Informatique UAN
+# 🎉 PRIORITY 1 COMPLÉTÉE - Club Informatique U-Auben
 
 ## 📋 Résumé de l'implémentation
 
@@ -148,8 +148,8 @@ Crée les rôles et permissions du système.
 
 Crée le compte admin par défaut :
 
--   Email: `admin@clubinfo-uan.bf`
--   Password: `AdminUAN2025!`
+-   Email: `admin@clubinfo-u-auben.bf`
+-   Password: `AdminU-Auben2025!`
 -   Rôle: admin
 
 #### TestUserSeeder
@@ -181,11 +181,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
 ## 🧪 Comptes de test
 
-| Rôle      | Email                 | Password      | Accès               |
-| --------- | --------------------- | ------------- | ------------------- |
-| Admin     | admin@clubinfo-uan.bf | AdminUAN2025! | /admin/dashboard    |
-| User      | user@test.com         | password      | /candidature        |
-| Candidate | candidate@test.com    | password      | /candidat/dashboard |
+| Rôle      | Email                     | Password          | Accès               |
+| --------- | ------------------------- | ----------------- | ------------------- |
+| Admin     | admin@clubinfo-u-auben.bf | AdminU-Auben2025! | /admin/dashboard    |
+| User      | user@test.com             | password          | /candidature        |
+| Candidate | candidate@test.com        | password          | /candidat/dashboard |
 
 ## 🚀 Commandes pour démarrer
 

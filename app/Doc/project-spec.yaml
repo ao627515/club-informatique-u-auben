@@ -2,10 +2,10 @@
 
 ## 1. INFORMATIONS PROJET
 project:
-  name: Club Informatique Université Aube Nouvelle
+  name: Club Informatique Université Aube Nouvelle (Club Informatique U-Auben)
   description: Plateforme web pour gestion candidatures, votes et activités du club
   environment: Production
-  base_url: https://clubinfo-uan.bf
+  base_url: https://clubinformatiqueuauben.kgslab.com
 
 ## 2. STACK TECHNIQUE
 technology:
@@ -200,8 +200,8 @@ roles:
       - view_activity_logs (all actions, filterable)
       - access_admin_dashboard
     default_account:
-      email: "admin@clubinfo-uan.bf"
-      password: "AdminUAN2025!" # À changer après première connexion
+      email: "admin@clubinfo-u-auben.bf"
+      password: "AdminU-Auben2025!" # À changer après première connexion
 
 ## 6. BASE DE DONNÉES
 database:
@@ -314,7 +314,7 @@ public_pages:
     component: App\Livewire\HomePage
     sections:
       - hero:
-          title: "Bienvenue au Club Informatique UAN"
+          title: "Bienvenue au Club Informatique U-Auben"
           cta_primary: "Devenir Candidat"
           cta_secondary: "Voir les Candidats"
           background_image: hero-bg.jpg
@@ -621,7 +621,7 @@ priorities:
       - Install required packages (spatie/*)
       - Configure database + migrations
       - Setup roles: visitor, user, candidate, admin (via spatie/permission)
-      - Create admin seed (email: admin@clubinfo-uan.bf)
+      - Create admin seed (email: admin@clubinfo-u-auben.bf)
       - Page: /candidature (Candidate Registration)
       - Page: /candidat/dashboard (Candidate Dashboard)
       - Page: /admin/dashboard (Admin Dashboard - basic)

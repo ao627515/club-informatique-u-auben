@@ -1,0 +1,327 @@
+/* ========================================
+   VARIABLES CSS - Club Informatique U-Auben
+   ======================================== */
+
+:root {
+    /* Couleurs primaires */
+    --color-primary-white: #fefefe;
+
+    /* Couleurs neutres */
+    --color-neutral-dark-gray: #242423;
+
+    /* Couleurs accent */
+    --color-accent-red: #e00514;
+    --color-accent-red-hover: #b00410;
+
+    /* Couleurs secondaires */
+    --color-secondary-dark-blue: #2d256d;
+    --color-secondary-dark-blue-hover: #241e57;
+
+    /* Couleurs tertiaires */
+    --color-tertiary-light-blue: #009fe3;
+    --color-tertiary-light-blue-hover: #007fb5;
+
+    /* États */
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-info: var(--color-tertiary-light-blue);
+
+    /* Backgrounds */
+    --color-bg-primary: var(--color-primary-white);
+    --color-bg-secondary: #f8f9fa;
+    --color-bg-dark: var(--color-neutral-dark-gray);
+
+    /* Texte */
+    --color-text-primary: var(--color-neutral-dark-gray);
+    --color-text-secondary: #6b7280;
+    --color-text-on-dark: var(--color-primary-white);
+
+    /* Borders */
+    --color-border: #e5e7eb;
+    --color-border-focus: var(--color-tertiary-light-blue);
+
+    /* Typographie */
+    --font-family: "Inter", "Segoe UI", sans-serif;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --font-size-h1: 2.5rem; /* 40px */
+    --font-size-h2: 2rem; /* 32px */
+    --font-size-h3: 1.5rem; /* 24px */
+    --font-size-body: 1rem; /* 16px */
+    --font-size-small: 0.875rem; /* 14px */
+
+    /* Espacements */
+    --spacing-unit: 8px;
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 32px;
+    --spacing-xl: 48px;
+    --spacing-2xl: 64px;
+    --spacing-3xl: 96px;
+
+    /* Breakpoints (pour media queries) */
+    --breakpoint-mobile: 320px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1024px;
+    --breakpoint-wide: 1440px;
+
+    /* Border radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-fast: 150ms ease-in-out;
+    --transition-normal: 300ms ease-in-out;
+    --transition-slow: 500ms ease-in-out;
+}
+
+/* ========================================
+   RESET & BASE STYLES
+   ======================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-body);
+    font-weight: var(--font-weight-regular);
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary);
+    min-height: 100vh;
+}
+
+/* ========================================
+   TYPOGRAPHIE
+   ======================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-primary);
+}
+
+h1 {
+    font-size: var(--font-size-h1);
+}
+
+h2 {
+    font-size: var(--font-size-h2);
+}
+
+h3 {
+    font-size: var(--font-size-h3);
+}
+
+p {
+    margin-bottom: var(--spacing-sm);
+}
+
+a {
+    color: var(--color-tertiary-light-blue);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-tertiary-light-blue-hover);
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding-left: var(--spacing-lg);
+        padding-right: var(--spacing-lg);
+    }
+}
+
+/* Spacing utilities */
+.mt-xs {
+    margin-top: var(--spacing-xs);
+}
+.mt-sm {
+    margin-top: var(--spacing-sm);
+}
+.mt-md {
+    margin-top: var(--spacing-md);
+}
+.mt-lg {
+    margin-top: var(--spacing-lg);
+}
+.mt-xl {
+    margin-top: var(--spacing-xl);
+}
+
+.mb-xs {
+    margin-bottom: var(--spacing-xs);
+}
+.mb-sm {
+    margin-bottom: var(--spacing-sm);
+}
+.mb-md {
+    margin-bottom: var(--spacing-md);
+}
+.mb-lg {
+    margin-bottom: var(--spacing-lg);
+}
+.mb-xl {
+    margin-bottom: var(--spacing-xl);
+}
+
+.pt-xs {
+    padding-top: var(--spacing-xs);
+}
+.pt-sm {
+    padding-top: var(--spacing-sm);
+}
+.pt-md {
+    padding-top: var(--spacing-md);
+}
+.pt-lg {
+    padding-top: var(--spacing-lg);
+}
+.pt-xl {
+    padding-top: var(--spacing-xl);
+}
+
+.pb-xs {
+    padding-bottom: var(--spacing-xs);
+}
+.pb-sm {
+    padding-bottom: var(--spacing-sm);
+}
+.pb-md {
+    padding-bottom: var(--spacing-md);
+}
+.pb-lg {
+    padding-bottom: var(--spacing-lg);
+}
+.pb-xl {
+    padding-bottom: var(--spacing-xl);
+}
+
+/* Text alignment */
+.text-center {
+    text-align: center;
+}
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+
+/* Display utilities */
+.hidden {
+    display: none;
+}
+.block {
+    display: block;
+}
+.inline-block {
+    display: inline-block;
+}
+.flex {
+    display: flex;
+}
+.grid {
+    display: grid;
+}
+
+/* Flex utilities */
+.flex-col {
+    flex-direction: column;
+}
+.flex-row {
+    flex-direction: row;
+}
+.items-center {
+    align-items: center;
+}
+.justify-center {
+    justify-content: center;
+}
+.justify-between {
+    justify-content: space-between;
+}
+.gap-xs {
+    gap: var(--spacing-xs);
+}
+.gap-sm {
+    gap: var(--spacing-sm);
+}
+.gap-md {
+    gap: var(--spacing-md);
+}
+.gap-lg {
+    gap: var(--spacing-lg);
+}
+
+/* Responsive utilities */
+@media (max-width: 767px) {
+    .mobile-hidden {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .tablet-visible {
+        display: block;
+    }
+}
+
+@media (min-width: 1024px) {
+    .desktop-visible {
+        display: block;
+    }
+}

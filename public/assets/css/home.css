@@ -1,0 +1,70 @@
+/* ========================================
+   HOME PAGE - Page d'accueil
+   ======================================== */
+
+.home {
+    background-color: var(--color-bg-primary);
+}
+
+/* Hero Section */
+.home__hero {
+    background: linear-gradient(
+        135deg,
+        var(--color-secondary-dark-blue) 0%,
+        var(--color-accent-red) 100%
+    );
+    color: var(--color-text-on-dark);
+    padding: var(--spacing-3xl) 0;
+    text-align: center;
+}
+
+.home__hero-title {
+    font-size: 3rem;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-on-dark);
+}
+
+@media (max-width: 767px) {
+    .home__hero-title {
+        font-size: 2rem;
+    }
+}
+
+.home__hero-subtitle {
+    font-size: var(--font-size-h3);
+    margin-bottom: var(--spacing-xl);
+    color: rgba(254, 254, 254, 0.9);
+}
+
+.home__hero-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Info Section */
+.home__info {
+    padding: var(--spacing-2xl) 0;
+    background-color: var(--color-bg-secondary);
+}
+
+.home__info-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.home__info-title {
+    font-size: var(--font-size-h2);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-primary);
+}
+
+.home__info-text {
+    font-size: var(--font-size-body);
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+}

@@ -1,4 +1,4 @@
-# Status Priority 1 - Club Informatique UAN
+# Status Priority 1 - Club Informatique U-Auben
 
 ## ✅ Fonctionnalités implémentées
 
@@ -64,7 +64,7 @@
 ### 6. Seeders créés
 
 -   ✅ RoleSeeder : crée les rôles et permissions
--   ✅ AdminSeeder : crée admin@clubinfo-uan.bf (password: AdminUAN2025!)
+-   ✅ AdminSeeder : crée admin@clubinfo-u-auben.bf (password: AdminU-Auben2025!)
 -   ✅ TestUserSeeder : crée des utilisateurs de test
 
 ### 7. Routes configurées
@@ -78,8 +78,8 @@
 
 ### Admin
 
--   Email: `admin@clubinfo-uan.bf`
--   Password: `AdminUAN2025!`
+-   Email: `admin@clubinfo-u-auben.bf`
+-   Password: `AdminU-Auben2025!`
 -   Accès: `/admin/dashboard`
 
 ### User (pour soumettre candidature)
@@ -126,7 +126,7 @@ composer run dev
 
 #### B. Tester la validation admin
 
-1. Se connecter avec `admin@clubinfo-uan.bf` / `AdminUAN2025!`
+1. Se connecter avec `admin@clubinfo-u-auben.bf` / `AdminU-Auben2025!`
 2. Aller sur `/admin/dashboard`
 3. Voir la candidature en attente
 4. Cliquer sur "Valider"
@@ -155,7 +155,7 @@ composer run dev
 
 ## ⚠️ Points d'attention
 
-### Manquants (pour Priority 2 & 3)
+### Manqu-aubents (pour Priority 2 & 3)
 
 -   ❌ Pages publiques (accueil, à propos, liste candidats, profil candidat)
 -   ❌ Système d'authentification complet (login, register, password reset)
@@ -197,7 +197,7 @@ composer run dev
 ✅ **Install required packages (spatie/\*)**
 ✅ **Configure database + migrations**
 ✅ **Setup roles: visitor, user, candidate, admin (via spatie/permission)**
-✅ **Create admin seed (email: admin@clubinfo-uan.bf)**
+✅ **Create admin seed (email: admin@clubinfo-u-auben.bf)**
 ✅ **Page: /candidature (Candidate Registration)**
 ✅ **Page: /candidat/dashboard (Candidate Dashboard)**
 ✅ **Page: /admin/dashboard (Admin Dashboard - basic)**

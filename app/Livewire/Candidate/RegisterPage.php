@@ -3,8 +3,11 @@
 namespace App\Livewire\Candidate;
 
 use App\Data\CandidateData;
+use App\Models\User;
 use App\Services\CandidateService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -12,26 +15,41 @@ class RegisterPage extends Component
 {
     use WithFileUploads;
 
+    // Champs utilisateur
+    public $matricule;
+
+    public $nom;
+
+    public $prenom;
+
+    public $email;
+
+    public $password;
+
+    public $password_confirmation;
+
+    public $photoUtilisateur;
+
+    // Champs candidature
     public $photoOfficielle;
+
     public $programme;
+
     public $vision;
+
     public $motivations;
 
     public function mount(CandidateService $candidateService): void
     {
-        // Vérifier que l'utilisateur est authentifié
-        if (!Auth::check()) {
-            abort(403, 'Vous devez être connecté pour accéder à cette page.');
-        }
+        // Si l'utilisateur est déjà authentifié
+        if (Auth::check()) {
+            // Vérifier s'il a déjà une candidature
+            if ($candidateService->userHasCandidate(Auth::id())) {
+                $this->redirect(route('candidate.dashboard'), navigate: true);
+            }
 
-        // Vérifier si l'utilisateur a déjà une candidature
-        if ($candidateService->userHasCandidate(Auth::id())) {
-            $this->redirect(route('candidate.dashboard'), navigate: true);
-        }
-
-        // Vérifier si l'utilisateur a le rôle 'user'
-        if (!Auth::user()->hasRole('user')) {
-            abort(403, 'Seuls les utilisateurs peuvent soumettre une candidature.');
+            // Si authentifié mais pas de candidature, il peut continuer
+            // (on cachera les champs d'inscription dans la vue)
         }
     }
 
@@ -40,12 +58,26 @@ class RegisterPage extends Component
      */
     protected function rules(): array
     {
-        return [
+        $rules = [
             'photoOfficielle' => 'required|image|mimes:jpeg,png|max:2048',
             'programme' => 'required|file|mimes:pdf|max:5120',
             'vision' => 'required|string|min:100|max:2000',
             'motivations' => 'required|string|min:50|max:1000',
         ];
+
+        // Si l'utilisateur n'est pas authentifié, ajouter les règles d'inscription
+        if (! Auth::check()) {
+            $rules = array_merge($rules, [
+                'matricule' => 'required|string|max:50|unique:users,matricule',
+                'nom' => 'required|string|max:100',
+                'prenom' => 'required|string|max:100',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:8|confirmed',
+                'photoUtilisateur' => 'nullable|image|mimes:jpeg,png|max:2048',
+            ]);
+        }
+
+        return $rules;
     }
 
     /**
@@ -54,6 +86,19 @@ class RegisterPage extends Component
     protected function messages(): array
     {
         return [
+            'matricule.required' => 'Le matricule est obligatoire.',
+            'matricule.unique' => 'Ce matricule est déjà utilisé.',
+            'nom.required' => 'Le nom est obligatoire.',
+            'prenom.required' => 'Le prénom est obligatoire.',
+            'email.required' => "L'email est obligatoire.",
+            'email.email' => "L'email doit être une adresse valide.",
+            'email.unique' => 'Cet email est déjà utilisé.',
+            'password.required' => 'Le mot de passe est obligatoire.',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+            'password.confirmed' => 'Les mots de passe ne correspondent pas.',
+            'photoUtilisateur.image' => 'Le fichier doit être une image.',
+            'photoUtilisateur.mimes' => 'La photo doit être au format JPEG ou PNG.',
+            'photoUtilisateur.max' => 'La photo ne doit pas dépasser 2 Mo.',
             'photoOfficielle.required' => 'La photo officielle est obligatoire.',
             'photoOfficielle.image' => 'Le fichier doit être une image.',
             'photoOfficielle.mimes' => 'La photo doit être au format JPEG ou PNG.',
@@ -79,21 +124,45 @@ class RegisterPage extends Component
         $this->validate();
 
         try {
-            $candidateData = new CandidateData(
-                userId: Auth::id(),
-                photoOfficielle: $this->photoOfficielle,
-                programme: $this->programme,
-                vision: $this->vision,
-                motivations: $this->motivations
-            );
+            DB::transaction(function () use ($candidateService) {
+                $user = Auth::user();
 
-            $candidateService->createCandidate($candidateData, Auth::user());
+                // Si l'utilisateur n'est pas authentifié, créer le compte
+                if (! $user) {
+                    $user = User::create([
+                        'matricule' => $this->matricule,
+                        'nom' => $this->nom,
+                        'prenom' => $this->prenom,
+                        'email' => $this->email,
+                        'password' => Hash::make($this->password),
+                        'photo_path' => $this->photoUtilisateur ? $this->photoUtilisateur->store('photos', 'public') : null,
+                        'email_verified_at' => now(),
+                    ]);
 
-            session()->flash('success', 'Votre candidature a été soumise avec succès ! Elle sera examinée par un administrateur.');
+                    // Assigner le rôle user
+                    $user->assignRole('user');
 
-            $this->redirect(route('candidate.dashboard'), navigate: true);
+                    // Connecter l'utilisateur
+                    Auth::login($user);
+                }
+
+                // Créer la candidature
+                $candidateData = new CandidateData(
+                    userId: $user->id,
+                    photoOfficielle: $this->photoOfficielle,
+                    programme: $this->programme,
+                    vision: $this->vision,
+                    motivations: $this->motivations
+                );
+
+                $candidateService->createCandidate($candidateData, $user);
+
+                session()->flash('success', 'Votre candidature a été soumise avec succès ! Elle sera examinée par un administrateur.');
+
+                $this->redirect(route('candidate.dashboard'), navigate: true);
+            });
         } catch (\Exception $e) {
-            session()->flash('error', 'Une erreur est survenue lors de la soumission de votre candidature. Veuillez réessayer.');
+            session()->flash('error', 'Une erreur est survenue : '.$e->getMessage());
         }
     }
 

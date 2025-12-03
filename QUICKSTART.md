@@ -19,11 +19,11 @@ php artisan serve
 
 ## 🔑 Comptes de test
 
-| Rôle          | Email                 | Mot de passe  | URL                 |
-| ------------- | --------------------- | ------------- | ------------------- |
-| **Admin**     | admin@clubinfo-uan.bf | AdminUAN2025! | /admin/dashboard    |
-| **User**      | user@test.com         | password      | /candidature        |
-| **Candidate** | candidate@test.com    | password      | /candidat/dashboard |
+| Rôle          | Email                     | Mot de passe      | URL                 |
+| ------------- | ------------------------- | ----------------- | ------------------- |
+| **Admin**     | admin@clubinfo-u-auben.bf | AdminU-Auben2025! | /admin/dashboard    |
+| **User**      | user@test.com             | password          | /candidature        |
+| **Candidate** | candidate@test.com        | password          | /candidat/dashboard |
 
 ## 📄 Pages fonctionnelles
 
@@ -83,7 +83,7 @@ Toutes les tables créées et seedées :
 
     ```
     http://localhost:8000/admin/dashboard
-    admin@clubinfo-uan.bf / AdminUAN2025!
+    admin@clubinfo-u-auben.bf / AdminU-Auben2025!
     ```
 
     → Voir liste vide
