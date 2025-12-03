@@ -21,7 +21,7 @@
     @stack('styles')
 
     <!-- Vite Assets -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
 
     <script src="https://kit.fontawesome.com/6ecc15475c.js" crossorigin="anonymous"></script>
 </head>
