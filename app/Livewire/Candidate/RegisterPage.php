@@ -3,10 +3,12 @@
 namespace App\Livewire\Candidate;
 
 use App\Data\CandidateData;
+use App\Mail\CandidateRegistrationReceived;
 use App\Models\User;
 use App\Services\CandidateService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -220,7 +222,10 @@ class RegisterPage extends Component
         $this->validate();
 
         try {
-            DB::transaction(function () use ($candidateService) {
+            $createdUser = null;
+            $createdCandidate = null;
+
+            DB::transaction(function () use ($candidateService, &$createdUser, &$createdCandidate) {
                 $user = Auth::user();
 
                 // Si l'utilisateur n'est pas authentifié, créer le compte sans mot de passe
@@ -250,15 +255,20 @@ class RegisterPage extends Component
                     vision: $this->vision,
                 );
 
-                $candidateService->createCandidate($candidateData, $user);
+                $createdCandidate = $candidateService->createCandidate($candidateData, $user);
+                $createdUser = $user;
             });
+
+            if ($createdUser && $createdCandidate) {
+                Mail::to($createdUser->email)->send(new CandidateRegistrationReceived($createdCandidate));
+            }
 
             session()->flash('success', 'Votre candidature a été soumise avec succès ! Votre dossier est en cours de traitement par un administrateur.');
             $this->reset();
             $this->currentStep = 1;
             // On reste sur la même page, pas de redirection
         } catch (\Exception $e) {
-            session()->flash('error', 'Une erreur est survenue : ' . $e->getMessage());
+            session()->flash('error', 'Une erreur est survenue : '.$e->getMessage());
         }
     }
 
