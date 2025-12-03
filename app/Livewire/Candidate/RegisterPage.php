@@ -259,9 +259,9 @@ class RegisterPage extends Component
                 $createdUser = $user;
             });
 
-            if ($createdUser && $createdCandidate) {
-                Mail::to($createdUser->email)->send(new CandidateRegistrationReceived($createdCandidate));
-            }
+            // if ($createdUser && $createdCandidate) {
+            //     Mail::to($createdUser->email)->send(new CandidateRegistrationReceived($createdCandidate));
+            // }
 
             session()->flash('success', 'Votre candidature a été soumise avec succès ! Votre dossier est en cours de traitement par un administrateur.');
             $this->reset();
