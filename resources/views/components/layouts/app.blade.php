@@ -152,7 +152,7 @@
                         <p class="footer__text">
                             <i class="fa-solid fa-envelope"
                                 style="color: var(--color-tertiary-light-blue); margin-right: 8px;"></i>
-                            contact@clubinfo-u-auben.bf
+                            ouaga.auben.club.informatique@gmail.com
                         </p>
                         <p class="footer__text">
                             <i class="fa-solid fa-location-dot"
