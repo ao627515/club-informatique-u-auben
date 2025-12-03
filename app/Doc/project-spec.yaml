@@ -1,163 +1,830 @@
+# CAHIER DE CHARGES - Club Informatique Université Aube Nouvelle
+
+## 1. INFORMATIONS PROJET
 project:
   name: Club Informatique Université Aube Nouvelle
-  tech_stack:
-    backend: Laravel 12
-    frontend: Livewire 3
-    css: BEM
-    libraries:
-      - spatie/laravel-permission
-      - spatie/laravel-medialibrary
-      - spatie/laravel-activitylog
-      - spatie/laravel-data
-  architecture:
-    pattern: MVC + Service + Repository
-    dto: Laravel Data Objects
-    conventions:
-      naming: english for classes, methods, variables
-      comments: french
-      method_single_action: true
-      reuse_existing_methods: true
+  description: Plateforme web pour gestion candidatures, votes et activités du club
+  environment: Production
+  base_url: https://clubinfo-uan.bf
 
+## 2. STACK TECHNIQUE
+technology:
+  backend:
+    framework: Laravel 12
+    php_version: "8.3"
+    database: MySQL 8.0
+  frontend:
+    framework: Livewire 3
+    css_methodology: BEM (Block Element Modifier)
+    javascript: Alpine.js (inclus avec Livewire)
+  packages_required:
+    - spatie/laravel-permission: "^6.0"    # Gestion rôles et permissions
+    - spatie/laravel-medialibrary: "^11.0" # Upload et gestion médias
+    - spatie/laravel-activitylog: "^4.0"   # Logs des actions
+    - spatie/laravel-data: "^4.0"          # DTOs typés
+
+## 3. ARCHITECTURE DÉTAILLÉE
+architecture:
+  pattern: MVC + Service Layer + Repository Pattern
+  structure:
+    controllers:
+      location: app/Http/Controllers
+      responsibility: Recevoir requêtes HTTP, valider input basique, appeler services
+      naming: "{Entity}Controller.php"
+      example: "CandidateController.php"
+
+    services:
+      location: app/Services
+      responsibility: Logique métier, orchestration, appels aux repositories
+      naming: "{Entity}Service.php"
+      example: "CandidateService.php"
+      rules:
+        - Une méthode = une action métier
+        - Pas d'accès direct à la DB (utiliser repositories)
+        - Commentaires en français pour expliquer la logique
+
+    repositories:
+      location: app/Repositories
+      responsibility: Accès données, requêtes Eloquent, CRUD
+      naming: "{Entity}Repository.php"
+      example: "CandidateRepository.php"
+      rules:
+        - Une méthode = une action DB
+        - Réutiliser les méthodes existantes
+        - Pas de logique métier
+
+    dtos:
+      location: app/Data
+      framework: Spatie Laravel Data
+      responsibility: Validation, transformation données
+      naming: "{Entity}Data.php"
+      example: "CandidateData.php"
+      usage: Communication entre Controller → Service → Repository
+
+    livewire_components:
+      location: app/Livewire
+      responsibility: Composants réactifs frontend
+      structure:
+        - parent_component: Un par page (ex: CandidateRegistrationPage.php)
+        - child_components: Un par fonctionnalité (ex: CandidateForm.php, DocumentUpload.php)
+      naming: "{Action}{Entity}{Type}.php"
+      views_location: resources/views/livewire
+
+  conventions:
+    naming:
+      code: english (classes, methods, variables)
+      comments: french
+      database: snake_case
+      routes: kebab-case
+    methods:
+      principle: Single Responsibility
+      example_good: "validateCandidate()"
+      example_bad: "validateAndSaveCandidate()"
+    reusability: Toujours vérifier si une méthode existe avant d'en créer
+
+## 4. DESIGN SYSTEM
+colors:
+  primary:
+    white: "#FEFEFE"
+    description: Fond principal, texte sur fond sombre
+
+  neutral:
+    dark_gray: "#242423"
+    description: Texte principal, headers
+
+  accent:
+    red_cta: "#E00514"
+    description: Boutons CTA, liens importants, états actifs
+    hover: "#B00410"  # 20% plus sombre
+
+  secondary:
+    dark_blue: "#2D256D"
+    description: Sections alternées, badges
+    hover: "#241E57"
+
+  tertiary:
+    light_blue: "#009FE3"
+    description: Liens, icônes, badges informatifs
+    hover: "#007FB5"
+
+typography:
+  font_family: "'Inter', 'Segoe UI', sans-serif"
+  weights:
+    regular: 400
+    medium: 500
+    semibold: 600
+    bold: 700
+  sizes:
+    h1: "2.5rem"   # 40px
+    h2: "2rem"     # 32px
+    h3: "1.5rem"   # 24px
+    body: "1rem"   # 16px
+    small: "0.875rem" # 14px
+
+spacing:
+  unit: 8px
+  scale: [8, 16, 24, 32, 48, 64, 96]
+
+responsive:
+  breakpoints:
+    mobile: "320px"
+    tablet: "768px"
+    desktop: "1024px"
+    wide: "1440px"
+  approach: Mobile First
+
+css_methodology:
+  bem:
+    block: "candidate-card"
+    element: "candidate-card__name"
+    modifier: "candidate-card--featured"
+  structure: "components/{component-name}.css"
+
+## 5. RÔLES ET PERMISSIONS
 roles:
   visitor:
+    slug: visitor
     description: Non connecté, consulte pages publiques
-    permissions: view_public_pages, view_candidates
-  user:
-    description: Inscrit et authentifié
-    permissions: vote, participate_activities, update_profile
-  candidate:
-    description: Utilisateur ayant candidature validée
     permissions:
-      - candidate.apply
+      - view_public_pages
+      - view_candidates_list
+      - view_candidate_profile
+    database_required: false
+
+  user:
+    slug: user
+    description: Inscrit et authentifié, peut voter
+    permissions:
+      - all_visitor_permissions
+      - vote
+      - participate_activities
+      - update_own_profile
+      - view_vote_results_after_period
+    registration_fields:
+      - matricule (unique, required)
+      - nom (required)
+      - prenom (required)
+      - email (unique, required)
+      - password (min 8 chars)
+      - photo (jpeg/png, max 2MB)
+
+  candidate:
+    slug: candidate
+    description: Utilisateur avec candidature validée
+    permissions:
+      - all_user_permissions
+      - candidate.view_dashboard
       - candidate.update_profile
-      - candidate.view_status
-      - candidate.dashboard_access
+      - candidate.view_application_status
+      - candidate.upload_documents
+    application_fields:
+      - photo_officielle (jpeg/png, max 2MB)
+      - programme (pdf, max 5MB)
+      - vision (textarea, max 2000 chars)
+      - motivations (textarea, max 1000 chars)
+    states:
+      - pending: Candidature soumise, en attente validation
+      - approved: Validée par admin, visible publiquement
+      - rejected: Rejetée par admin
+
   admin:
-    description: Gère toute la plateforme
+    slug: admin
+    description: Super utilisateur, gère toute la plateforme
     permissions:
-      - manage_users
-      - manage_candidates
-      - manage_votes
-      - manage_activities
-      - manage_mandates
-      - manage_roles
-      - view_activity_logs
+      - manage_users (create, read, update, delete, assign_roles)
+      - manage_candidates (validate, reject, edit, delete)
+      - manage_votes (open_period, close_period, view_results, export)
+      - manage_activities (create, read, update, delete, publish)
+      - manage_mandates (create, read, update, delete)
+      - manage_roles (assign, revoke)
+      - view_activity_logs (all actions, filterable)
+      - access_admin_dashboard
+    default_account:
+      email: "admin@clubinfo-uan.bf"
+      password: "AdminUAN2025!" # À changer après première connexion
 
-colors:
-  primary_white: "#FEFEFE"
-  dark_gray: "#242423"
-  red_cta: "#E00514"
-  dark_blue: "#2D256D"
-  light_blue: "#009FE3"
+## 6. BASE DE DONNÉES
+database:
+  tables:
+    users:
+      columns:
+        - id: bigIncrements
+        - matricule: string(50), unique, index
+        - nom: string(100)
+        - prenom: string(100)
+        - email: string, unique
+        - password: string
+        - photo_path: string, nullable
+        - email_verified_at: timestamp, nullable
+        - remember_token: string(100), nullable
+        - timestamps
+      relations:
+        - hasOne: Candidate
+        - hasMany: Vote
+        - belongsToMany: Role (via model_has_roles)
 
-pages:
-  public:
-    - home:
-        description: Hero section, apercu activités, mandat, CTA
-        components:
-          - HeroBanner
-          - ActivitiesPreview
-          - MandatePreview
-    - about:
-        description: Histoire, vision, mission, équipe
-    - mandate:
-        description: Phase1 static, Phase2 dynamique future
-    - activities:
-        description: Phase1 static, Phase2 CRUD via admin
-    - candidates:
-        description: Liste candidats validés, fiche candidate
-  user:
-    - registration:
-        description: Formulaire inscription utilisateur, upload photo
-    - login:
-        description: Login Livewire, mot de passe oublié
-  candidate:
-    - registration:
-        description: Formulaire candidature, photo, programme, vision
-        priority: 1
-        components: [RegisterCandidateForm, CandidateDocumentUpload]
-    - dashboard:
-        description: Statut candidature, édition profil candidat, historique actions
-  voting:
-    - vote_page:
-        description: Accessible users only, un vote par utilisateur, résultats après période
-  admin:
-    - dashboard:
-        modules:
-          - manage_users
-          - manage_candidates
-          - manage_votes
-          - manage_activities
-          - manage_mandates
-          - manage_roles
-          - activity_logs
+    candidates:
+      columns:
+        - id: bigIncrements
+        - user_id: foreignId, constrained('users').onDelete('cascade')
+        - photo_officielle_path: string
+        - programme_path: string
+        - vision: text
+        - motivations: text
+        - status: enum('pending', 'approved', 'rejected'), default('pending')
+        - validated_at: timestamp, nullable
+        - validated_by: foreignId, nullable, constrained('users')
+        - rejection_reason: text, nullable
+        - votes_count: integer, default(0), index
+        - timestamps
+      relations:
+        - belongsTo: User
+        - hasMany: Vote
+      indexes:
+        - status
+        - votes_count (pour classement)
+
+    votes:
+      columns:
+        - id: bigIncrements
+        - user_id: foreignId, constrained('users').onDelete('cascade')
+        - candidate_id: foreignId, constrained('candidates').onDelete('cascade')
+        - voted_at: timestamp
+        - ip_address: string(45), nullable
+        - user_agent: text, nullable
+      relations:
+        - belongsTo: User
+        - belongsTo: Candidate
+      indexes:
+        - unique: [user_id] # Un seul vote par user
+        - candidate_id
+        - voted_at
+
+    vote_periods:
+      columns:
+        - id: bigIncrements
+        - name: string(200)
+        - starts_at: timestamp
+        - ends_at: timestamp
+        - is_active: boolean, default(false)
+        - results_published_at: timestamp, nullable
+        - timestamps
+      indexes:
+        - is_active
+
+    activities:
+      columns:
+        - id: bigIncrements
+        - title: string(200)
+        - slug: string, unique
+        - description: text
+        - content: longText, nullable
+        - featured_image_path: string, nullable
+        - date: date, nullable
+        - location: string, nullable
+        - is_published: boolean, default(false)
+        - published_at: timestamp, nullable
+        - timestamps
+      indexes:
+        - slug
+        - is_published
+
+    mandates:
+      columns:
+        - id: bigIncrements
+        - title: string(200)
+        - slug: string, unique
+        - description: text
+        - content: longText
+        - icon: string, nullable
+        - order: integer, default(0)
+        - is_active: boolean, default(true)
+        - timestamps
+      indexes:
+        - slug
+        - is_active
+
+## 7. PAGES ET FONCTIONNALITÉS
+
+### PAGES PUBLIQUES (Visitors)
+public_pages:
+  home:
+    route: /
+    view: livewire/pages/home.blade.php
+    component: App\Livewire\HomePage
+    sections:
+      - hero:
+          title: "Bienvenue au Club Informatique UAN"
+          cta_primary: "Devenir Candidat"
+          cta_secondary: "Voir les Candidats"
+          background_image: hero-bg.jpg
+
+      - activities_preview:
+          title: "Nos Activités"
+          items_count: 3
+          data_source: Activity::published()->latest()->take(3)
+          cta: "Voir toutes les activités"
+
+      - mandate_preview:
+          title: "Notre Mandat"
+          items_count: 4
+          data_source: Mandate::active()->orderBy('order')->take(4)
+          cta: "Découvrir notre mandat"
+
+      - stats_section:
+          members_count: dynamic
+          activities_count: dynamic
+          years_active: static
+
+  about:
+    route: /a-propos
+    view: pages/about.blade.php
+    sections:
+      - histoire
+      - vision
+      - mission
+      - equipe_actuelle
+
+  mandate:
+    route: /mandat
+    view: pages/mandate.blade.php
+    phase_1: Static content
+    phase_2: Dynamic (admin CRUD) - Priority 3
+
+  activities:
+    route: /activites
+    view: livewire/pages/activities.blade.php
+    component: App\Livewire\ActivitiesPage
+    phase_1: Static list
+    phase_2: Dynamic grid with filters - Priority 3
+
+  candidates_list:
+    route: /candidats
+    view: livewire/pages/candidates-list.blade.php
+    component: App\Livewire\CandidatesListPage
+    description: Liste tous les candidats avec status 'approved'
+    features:
+      - Grid responsive (3 cols desktop, 2 tablet, 1 mobile)
+      - Card avec photo, nom, programme preview
+      - Ordre par votes_count DESC
+      - Lien vers fiche détaillée
+    data: Candidate::with('user')->where('status', 'approved')->orderBy('votes_count', 'desc')->get()
+
+  candidate_profile:
+    route: /candidats/{slug}
+    view: livewire/pages/candidate-profile.blade.php
+    component: App\Livewire\CandidateProfilePage
+    description: Fiche détaillée d'un candidat
+    sections:
+      - photo_officielle
+      - nom_complet
+      - vision (full text)
+      - motivations (full text)
+      - programme (download PDF button)
+      - vote_button (si user connecté et période active)
+
+### PAGES UTILISATEUR (User)
+user_pages:
+  registration:
+    route: /inscription
+    view: livewire/auth/register.blade.php
+    component: App\Livewire\Auth\Register
+    priority: 3
+    fields:
+      - matricule: required, unique, string, max:50
+      - nom: required, string, max:100
+      - prenom: required, string, max:100
+      - email: required, email, unique
+      - password: required, min:8, confirmed
+      - photo: required, image, mimes:jpeg,png, max:2048
+    process:
+      - Validate input
+      - Upload photo via MediaLibrary
+      - Hash password
+      - Create user
+      - Assign 'user' role
+      - Send verification email
+      - Login automatically
+      - Redirect to /candidats
+
+  login:
+    route: /connexion
+    view: livewire/auth/login.blade.php
+    component: App\Livewire\Auth\Login
+    priority: 3
+    fields:
+      - email: required, email
+      - password: required
+      - remember: boolean
+    features:
+      - "Mot de passe oublié" link
+      - Throttling: 5 attempts / 1 minute
+    redirect_after:
+      - admin: /admin/dashboard
+      - candidate: /candidat/dashboard
+      - user: /candidats
+
+### PAGES CANDIDAT (Candidate)
+candidate_pages:
+  registration:
+    route: /candidature
+    view: livewire/candidate/register.blade.php
+    component: App\Livewire\Candidate\RegisterPage
+    priority: 1
+    middleware: auth
+    condition: User must have 'user' role and NOT already be a candidate
+    fields:
+      - photo_officielle: required, image, mimes:jpeg,png, max:2048
+      - programme: required, file, mimes:pdf, max:5120
+      - vision: required, string, min:100, max:2000
+      - motivations: required, string, min:50, max:1000
+    process:
+      - Validate input
+      - Upload photo_officielle via MediaLibrary
+      - Upload programme via MediaLibrary
+      - Create Candidate record with status='pending'
+      - Log activity
+      - Send notification to admins
+      - Redirect to /candidat/dashboard with success message
+    child_components:
+      - CandidateForm: Formulaire principal
+      - DocumentUpload: Upload photo et programme
+
+  dashboard:
+    route: /candidat/dashboard
+    view: livewire/candidate/dashboard.blade.php
+    component: App\Livewire\Candidate\Dashboard
+    priority: 1
+    middleware: auth, role:candidate
+    sections:
+      - status_card:
+          states:
+            pending: "Candidature en cours de validation"
+            approved: "Candidature validée ✓"
+            rejected: "Candidature rejetée" + rejection_reason
+
+      - profile_edit:
+          editable_fields:
+            - vision
+            - motivations
+            - photo_officielle (replace)
+            - programme (replace)
+          non_editable:
+            - status (only admin)
+
+      - activity_history:
+          data_source: Activity log filtered by candidate
+          items: 10 dernières actions
+
+### PAGE VOTE (User)
+voting_page:
+  route: /voter
+  view: livewire/voting/vote-page.blade.php
+  component: App\Livewire\Voting\VotePage
+  priority: 3
+  middleware: auth, role:user
+  conditions:
+    - Vote period must be active (vote_periods.is_active = true)
+    - User must NOT have already voted
+  features:
+    - Display all approved candidates
+    - Radio buttons for selection
+    - Confirm dialog before submit
+    - One vote per user (enforced DB + validation)
+    - Record: user_id, candidate_id, voted_at, ip_address
+    - Increment candidate.votes_count
+    - Show confirmation message
+    - Redirect to /candidats
+
+  results_page:
+    route: /resultats
+    view: livewire/voting/results.blade.php
+    component: App\Livewire\Voting\ResultsPage
+    priority: 3
+    condition: vote_periods.results_published_at IS NOT NULL
+    display:
+      - Ranking par votes_count DESC
+      - Graphique barres
+      - Pourcentages
+      - Total votes
+
+### PANEL ADMIN (Admin)
+admin_pages:
+  dashboard:
+    route: /admin/dashboard
+    view: livewire/admin/dashboard.blade.php
+    component: App\Livewire\Admin\Dashboard
+    priority: 1 (auth + access) / 3 (full features)
+    middleware: auth, role:admin
+    modules:
+      - stats_cards:
+          - total_users
+          - pending_candidates
+          - total_votes
+          - active_vote_period
+
+      - manage_candidates:
+          route: /admin/candidats
+          features:
+            - List all candidates (pending, approved, rejected)
+            - Filters by status
+            - Actions: Validate, Reject (with reason), Delete
+            - View full application
+          table_columns:
+            - Photo
+            - Nom complet
+            - Email
+            - Status
+            - Date soumission
+            - Actions
+
+      - manage_users:
+          route: /admin/utilisateurs
+          priority: 3
+          features:
+            - List all users
+            - Assign/revoke roles
+            - Delete users
+            - View activity logs per user
+
+      - manage_votes:
+          route: /admin/votes
+          priority: 3
+          features:
+            - Create vote period
+            - Open/close period
+            - View real-time results
+            - Publish results
+            - Export to Excel
+
+      - manage_activities:
+          route: /admin/activites
+          priority: 3
+          features: Full CRUD
+
+      - manage_mandates:
+          route: /admin/mandats
+          priority: 3
+          features: Full CRUD
+
+      - activity_logs:
+          route: /admin/logs
+          priority: 3
+          data_source: Spatie Activity Log
+          filters:
+            - By user
+            - By date range
+            - By action type
+
+## 8. USER STORIES DÉTAILLÉES
 
 user_stories:
   visitor:
-    - voir_accueil
-    - voir_candidats_public
-    - s_inscrire_utilisateur
+    - US-V1: "En tant que visiteur, je veux voir la page d'accueil pour découvrir le club"
+    - US-V2: "En tant que visiteur, je veux voir la liste des candidats validés"
+    - US-V3: "En tant que visiteur, je veux consulter le profil détaillé d'un candidat"
+    - US-V4: "En tant que visiteur, je veux m'inscrire comme utilisateur"
+
   user:
-    - inscrire_utilisateur
-    - se_connecter
-    - voter_candidat
-    - consulter_activites
+    - US-U1: "En tant qu'utilisateur, je veux me connecter avec email/password"
+    - US-U2: "En tant qu'utilisateur, je veux soumettre ma candidature"
+    - US-U3: "En tant qu'utilisateur, je veux voter pour un candidat (une seule fois)"
+    - US-U4: "En tant qu'utilisateur, je veux voir les résultats après publication"
+    - US-U5: "En tant qu'utilisateur, je veux modifier mon profil"
+
   candidate:
-    - soumettre_candidature
-    - voir_statut_candidature
-    - modifier_profil_candidat
-    - consulter_fiche_publique
+    - US-C1: "En tant que candidat, je veux accéder à mon dashboard"
+    - US-C2: "En tant que candidat, je veux voir le statut de ma candidature"
+    - US-C3: "En tant que candidat, je veux modifier ma vision et motivations"
+    - US-C4: "En tant que candidat, je veux remplacer mes documents (photo, programme)"
+    - US-C5: "En tant que candidat, je veux voir mon profil public"
+
   admin:
-    - valider_candidature
-    - rejeter_candidature
-    - gérer_utilisateurs
-    - gérer_activites
-    - gérer_mandats
-    - consulter_logs
+    - US-A1: "En tant qu'admin, je veux me connecter au panel admin"
+    - US-A2: "En tant qu'admin, je veux voir les candidatures en attente"
+    - US-A3: "En tant qu'admin, je veux valider une candidature"
+    - US-A4: "En tant qu'admin, je veux rejeter une candidature avec raison"
+    - US-A5: "En tant qu'admin, je veux assigner le rôle 'candidate' après validation"
+    - US-A6: "En tant qu'admin, je veux gérer les utilisateurs (CRUD, roles)"
+    - US-A7: "En tant qu'admin, je veux créer/ouvrir/fermer période de vote"
+    - US-A8: "En tant qu'admin, je veux voir les résultats de vote en temps réel"
+    - US-A9: "En tant qu'admin, je veux publier les résultats"
+    - US-A10: "En tant qu'admin, je veux consulter tous les logs d'activité"
+
+## 9. PRIORITÉS ET TIMELINE
 
 priorities:
-  - priority_1:
-      features:
-        - candidate_registration
-        - admin_auth_and_candidate_access
-        - assign_candidate_role
-      deadline: today
-  - priority_2:
-      features:
-        - static_pages: [home, about, mandate, activities]
-        - candidates_public_page
-      deadline: 2025-12-10
-  - priority_3:
-      features:
-        - voting_page
-        - user_registration_login
-        - full_admin_dashboard
-        - dynamic_mandate_activities
-      deadline: after_2025-12-10
+  priority_1:
+    deadline: "2025-12-02 (TODAY)"
+    features:
+      - Setup Laravel 12 + Livewire 3 project
+      - Install required packages (spatie/*)
+      - Configure database + migrations
+      - Setup roles: visitor, user, candidate, admin (via spatie/permission)
+      - Create admin seed (email: admin@clubinfo-uan.bf)
+      - Page: /candidature (Candidate Registration)
+      - Page: /candidat/dashboard (Candidate Dashboard)
+      - Page: /admin/dashboard (Admin Dashboard - basic)
+      - Feature: Admin can validate/reject candidates
+      - Feature: Admin assigns 'candidate' role after validation
+      - Setup MediaLibrary for uploads
+      - Setup Activity Log
+    deliverables:
+      - Candidate registration form functional
+      - Admin can access /admin/dashboard
+      - Admin can validate candidates
+      - Validated candidates get 'candidate' role
+      - Candidates can access /candidat/dashboard
 
-architecture_details:
-  livewire_components:
-    guidelines:
-      - parent_component_per_page
-      - child_component_per_functionality
-      - css_bem_classing
-  service_layer:
-    guidelines:
-      - call_repository_methods
-      - one_method_one_action
-      - french_comments
-  repository_layer:
-    guidelines:
-      - one_method_one_action
-      - reuse_existing_methods
-      - access_database_only
-  dto:
-    guidelines:
-      - validation_rules
-      - transformation
-      - communication_controller_service_repo
-  css_guidelines:
-    - use_logo_colors
-    - hover_variation_light
-    - responsive_mobile_first
-    - modern_sans_serif_typography
+  priority_2:
+    deadline: "2025-12-10"
+    features:
+      - Page: / (Home) - static
+      - Page: /a-propos (About) - static
+      - Page: /mandat (Mandate) - static
+      - Page: /activites (Activities) - static
+      - Page: /candidats (Candidates List) - dynamic
+      - Page: /candidats/{slug} (Candidate Profile) - dynamic
+      - Responsive design (mobile-first)
+      - Apply BEM CSS methodology
+      - Implement color scheme
+    deliverables:
+      - All public pages accessible
+      - Visitors can browse candidates
+      - Fully responsive design
+
+  priority_3:
+    deadline: "After 2025-12-10"
+    features:
+      - User registration + login system
+      - Password reset functionality
+      - Page: /voter (Voting Page)
+      - Vote period management (admin)
+      - Vote results page
+      - Full admin dashboard modules:
+        * Manage users
+        * Manage votes
+        * Manage activities (CRUD)
+        * Manage mandates (CRUD)
+        * Activity logs viewer
+      - Dynamic mandate page
+      - Dynamic activities page with filters
+    deliverables:
+      - Complete voting system
+      - Complete admin panel
+      - Dynamic content management
+
+## 10. RÈGLES MÉTIER CRITIQUES
+
+business_rules:
+  candidature:
+    - Un utilisateur ne peut soumettre qu'une seule candidature
+    - Une candidature doit être validée par un admin pour être visible
+    - Seuls les candidats 'approved' apparaissent sur /candidats
+    - Un candidat peut modifier sa vision/motivations même après validation
+    - Un candidat ne peut pas changer son status (seul admin)
+
+  vote:
+    - Un utilisateur ne peut voter qu'une seule fois (contrainte DB unique)
+    - Le vote est possible uniquement pendant une période active
+    - Les résultats sont visibles uniquement après publication par admin
+    - Le vote incrémente automatiquement candidate.votes_count
+    - IP et user_agent sont enregistrés pour audit
+
+  roles:
+    - Le rôle 'candidate' est assigné UNIQUEMENT après validation admin
+    - Un utilisateur peut avoir plusieurs rôles (user + candidate)
+    - Le rôle 'admin' a tous les permissions
+    - Le rôle 'visitor' n'existe pas en DB (utilisateur non authentifié)
+
+  medias:
+    - Photos: max 2MB, formats jpeg/png uniquement
+    - Programmes PDF: max 5MB
+    - Les médias sont gérés via spatie/laravel-medialibrary
+    - Les anciens médias sont supprimés lors du remplacement
+
+## 11. SÉCURITÉ
+
+security:
+  authentication:
+    - Session-based auth (Laravel default)
+    - Password hashing: bcrypt
+    - Password min length: 8 characters
+    - Email verification: optional (phase 3)
+
+  authorization:
+    - Middleware: role:admin, role:candidate, role:user
+    - Policies pour les actions sensibles
+    - CSRF protection sur tous les forms
+
+  upload:
+    - Validation mime types côté serveur
+    - Taille max respectée
+    - Noms fichiers sanitizés
+    - Stockage hors webroot (storage/app/media)
+
+  vote:
+    - Contrainte unique DB (user_id)
+    - Vérification période active
+    - Rate limiting sur route /voter
+    - IP logging pour audit
+
+## 12. TESTS À EFFECTUER
+
+tests:
+  priority_1:
+    - Candidat peut soumettre candidature avec documents
+    - Admin peut voir candidatures pending
+    - Admin peut valider candidature
+    - Admin peut rejeter candidature avec raison
+    - Rôle 'candidate' assigné automatiquement après validation
+    - Candidat validé peut accéder à /candidat/dashboard
+    - Candidat peut voir son status
+
+  priority_2:
+    - Toutes les pages publiques chargent sans erreur
+    - Navigation entre pages fonctionne
+    - Liste candidats affiche uniquement approved
+    - Profil candidat affiche toutes les infos
+    - Design responsive sur mobile/tablet/desktop
+
+  priority_3:
+    - Utilisateur peut s'inscrire et se connecter
+    - Utilisateur peut voter une seule fois
+    - Impossible de voter hors période
+    - Résultats visibles uniquement après publication
+    - Admin peut gérer tous les modules
+
+## 13. COMMANDES ARTISAN UTILES
+
+commands:
+  setup:
+    - php artisan migrate:fresh --seed
+    - php artisan storage:link
+    - php artisan permission:cache-reset
+
+  development:
+    - php artisan make:livewire CandidateRegistrationPage
+    - php artisan make:service CandidateService
+    - php artisan make:repository CandidateRepository
+    - php artisan make:data CandidateData
+
+  production:
+    - php artisan optimize
+    - php artisan route:cache
+    - php artisan view:cache
+    - php artisan config:cache
+
+## 14. NOTES IMPORTANTES POUR L'IA
+
+ai_instructions:
+  code_generation:
+    - Toujours créer Service + Repository + DTO pour chaque entité
+    - Utiliser Livewire pour toutes les pages interactives
+    - Appliquer BEM pour toutes les classes CSS
+    - Commenter le code en français
+    - Nommer en anglais (classes, méthodes, variables)
+    - Une méthode = une action
+    - Réutiliser les méthodes existantes
+
+  laravel_specifics:
+    - Utiliser Route::middleware() pour les protections
+    - Utiliser Gate/Policy pour les autorisations fines
+    - Utiliser Events/Listeners pour les actions déclenchées
+    - Utiliser Notifications pour emails
+    - Utiliser Jobs pour tâches longues
+
+  livewire_specifics:
+    - Un composant parent par page
+    - Composants enfants pour fonctionnalités
+    - Utiliser wire:model pour binding
+    - Utiliser $this->dispatch() pour communication
+    - Valider dans le composant Livewire
+
+  spatie_packages:
+    - assignRole() pour assigner rôles
+    - hasRole() pour vérifier rôles
+    - addMedia() pour upload
+    - activity()->log() pour logs
+    - from() et to() pour DTOs
+
+  priority_focus:
+    - Commencer par Priority 1
+    - Ne pas implémenter Priority 3 si non demandé
+    - Tester chaque feature avant de passer à la suivante
+    - Créer migrations dans l'ordre des dépendances
+
+## 15. RESSOURCES
+
+resources:
+  documentation:
+    - Laravel: https://laravel.com/docs/12.x
+    - Livewire: https://livewire.laravel.com/docs
+    - Spatie Permission: https://spatie.be/docs/laravel-permission
+    - Spatie Media Library: https://spatie.be/docs/laravel-medialibrary
+    - BEM Methodology: https://getbem.com
+
+  design_assets:
+    - Logo: /public/assets/imgs/logo.png
+    - Hero image: /public/assets/imgs/hero-bg.jpg
+    - Placeholder images: https://via.placeholder.com
