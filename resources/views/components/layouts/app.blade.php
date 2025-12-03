@@ -35,7 +35,7 @@
                     <span class="header__logo-text">Club Informatique U-Auben</span>
                 </a>
 
-                <nav class="nav">
+                {{-- <nav class="nav">
                     <button class="nav__toggle" aria-label="Menu">☰</button>
 
                     <ul class="nav__list">
@@ -106,7 +106,7 @@
                             </li>
                         @endguest
                     </ul>
-                </nav>
+                </nav> --}}
             </div>
         </header>
 
