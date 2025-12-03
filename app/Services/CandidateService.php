@@ -30,7 +30,6 @@ class CandidateService
         'photo_officielle_path' => '',
         'programme_path' => '',
         'vision' => $data->vision,
-        'motivations' => $data->motivations,
         'status' => 'pending',
       ]);
 
@@ -109,9 +108,6 @@ class CandidateService
       $updateData = [];
       if (isset($data['vision'])) {
         $updateData['vision'] = $data['vision'];
-      }
-      if (isset($data['motivations'])) {
-        $updateData['motivations'] = $data['motivations'];
       }
 
       if (isset($data['photo_officielle'])) {

@@ -20,7 +20,6 @@ class Candidate extends Model implements HasMedia
         'photo_officielle_path',
         'programme_path',
         'vision',
-        'motivations',
         'status',
         'validated_at',
         'validated_by',
@@ -41,7 +40,7 @@ class Candidate extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['status', 'vision', 'motivations', 'validated_at', 'rejection_reason'])
+            ->logOnly(['status', 'vision', 'validated_at', 'rejection_reason'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }

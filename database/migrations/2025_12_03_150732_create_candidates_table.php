@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('photo_officielle_path')->nullable();
             $table->string('programme_path')->nullable();
             $table->text('vision');
-            $table->text('motivations');
+            $table->text('motivations')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamp('validated_at')->nullable();
             $table->foreignId('validated_by')->nullable()->constrained('users');

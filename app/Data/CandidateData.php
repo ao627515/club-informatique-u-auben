@@ -12,7 +12,6 @@ class CandidateData extends Data
         public ?UploadedFile $photoOfficielle,
         public ?UploadedFile $programme,
         public string $vision,
-        public string $motivations,
         public string $status = 'pending',
     ) {}
 }

@@ -220,15 +220,35 @@
     box-shadow: 0 4px 15px rgba(224, 5, 20, 0.3);
 }
 
+/* Step completed */
+.candidate-register__progress-step--completed
+    .candidate-register__progress-icon {
+    background: linear-gradient(
+        135deg,
+        var(--color-tertiary-light-blue) 0%,
+        var(--color-secondary-dark-blue) 100%
+    );
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0, 159, 227, 0.2);
+}
+
 .candidate-register__progress-label {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
+    transition: all 0.3s ease;
 }
 
 .candidate-register__progress-step--active .candidate-register__progress-label {
     color: var(--color-accent-red);
     font-weight: var(--font-weight-semibold);
+}
+
+.candidate-register__progress-step--completed
+    .candidate-register__progress-label {
+    color: var(--color-tertiary-light-blue);
+    font-weight: var(--font-weight-medium);
 }
 
 .candidate-register__progress-line {
@@ -237,6 +257,15 @@
     background: var(--color-border);
     margin: 0 var(--spacing-sm);
     margin-bottom: 28px;
+    transition: all 0.3s ease;
+}
+
+.candidate-register__progress-line--completed {
+    background: linear-gradient(
+        90deg,
+        var(--color-tertiary-light-blue) 0%,
+        var(--color-secondary-dark-blue) 100%
+    );
 }
 
 @media (max-width: 576px) {
@@ -250,6 +279,89 @@
     .candidate-register__progress-label {
         font-size: 0.75rem;
     }
+}
+
+/* Summary section for step 3 */
+.candidate-register__summary {
+    margin-bottom: var(--spacing-lg);
+}
+
+.candidate-register__summary-section {
+    background: var(--color-bg-secondary);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--color-border);
+}
+
+.candidate-register__summary-section:last-child {
+    margin-bottom: 0;
+}
+
+.candidate-register__summary-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-secondary-dark-blue);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-tertiary-light-blue);
+}
+
+.candidate-register__summary-title i {
+    color: var(--color-tertiary-light-blue);
+}
+
+.candidate-register__summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+@media (max-width: 576px) {
+    .candidate-register__summary-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+}
+
+.candidate-register__summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.candidate-register__summary-label {
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+}
+
+.candidate-register__summary-value {
+    font-size: var(--font-size-base);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+.candidate-register__summary-vision {
+    padding: var(--spacing-md);
+    background: white;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.candidate-register__section-icon--success {
+    background: linear-gradient(
+        135deg,
+        var(--color-tertiary-light-blue) 0%,
+        var(--color-secondary-dark-blue) 100%
+    );
 }
 
 /* ========================================
@@ -825,13 +937,24 @@
     border-top: 1px solid var(--color-border);
 }
 
+/* Step-specific actions (without border-top) */
+.candidate-register__step-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-xl);
+}
+
 @media (max-width: 576px) {
-    .candidate-register__actions {
+    .candidate-register__actions,
+    .candidate-register__step-actions {
         flex-direction: column-reverse;
         gap: var(--spacing-md);
     }
 
-    .candidate-register__actions .btn {
+    .candidate-register__actions .btn,
+    .candidate-register__step-actions .btn {
         width: 100%;
     }
 }

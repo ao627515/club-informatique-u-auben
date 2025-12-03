@@ -14,23 +14,28 @@ class Dashboard extends Component
     use WithFileUploads;
 
     public Candidate $candidate;
+
     public $vision;
+
     public $motivations;
+
     public $photoOfficielle;
+
     public $programme;
+
     public $isEditing = false;
 
     public function mount(CandidateRepository $candidateRepository): void
     {
         // Vérifier que l'utilisateur est authentifié
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             abort(403, 'Vous devez être connecté pour accéder à cette page.');
         }
 
         // Récupérer la candidature de l'utilisateur
         $this->candidate = $candidateRepository->findByUserId(Auth::id());
 
-        if (!$this->candidate) {
+        if (! $this->candidate) {
             $this->redirect(route('candidate.register'), navigate: true);
         }
 
