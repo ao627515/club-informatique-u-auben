@@ -20,6 +20,11 @@ class Dashboard extends Component
 
     public function mount(CandidateRepository $candidateRepository): void
     {
+        // Vérifier que l'utilisateur est authentifié
+        if (! Auth::check()) {
+            abort(403, 'Vous devez être connecté pour accéder à cette page.');
+        }
+
         $this->loadPendingCandidates($candidateRepository);
     }
 
