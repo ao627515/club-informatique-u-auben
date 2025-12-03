@@ -123,11 +123,23 @@
                         <h3 class="footer__title">Club Informatique U-Auben</h3>
                         <p class="footer__text">
                             L'association des étudiants passionnés d'informatique de l'Université Aube Nouvelle.
+                            Ensemble, construisons l'avenir numérique.
                         </p>
+                        <div class="footer__social">
+                            <a href="#" class="footer__social-link" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="footer__social-link" aria-label="LinkedIn">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="footer__social-link" aria-label="GitHub">
+                                <i class="fa-brands fa-github"></i>
+                            </a>
+                        </div>
                     </div>
 
                     <div class="footer__section">
-                        <h3 class="footer__title">Liens rapides</h3>
+                        <h3 class="footer__title">Navigation</h3>
                         <ul class="footer__list">
                             <li><a href="{{ route('home') }}" class="footer__link">Accueil</a></li>
                             <li><a href="{{ route('candidate.register') }}" class="footer__link">Devenir Candidat</a>
@@ -138,9 +150,15 @@
                     <div class="footer__section">
                         <h3 class="footer__title">Contact</h3>
                         <p class="footer__text">
-                            Email: contact@clubinfo-u-auben.bf<br>
+                            <i class="fa-solid fa-envelope"
+                                style="color: var(--color-tertiary-light-blue); margin-right: 8px;"></i>
+                            contact@clubinfo-u-auben.bf
+                        </p>
+                        <p class="footer__text">
+                            <i class="fa-solid fa-location-dot"
+                                style="color: var(--color-tertiary-light-blue); margin-right: 8px;"></i>
                             Université Aube Nouvelle<br>
-                            Ouagadougou, Burkina Faso
+                            <span style="margin-left: 24px;">Ouagadougou, Burkina Faso</span>
                         </p>
                     </div>
                 </div>
@@ -148,6 +166,9 @@
                 <div class="footer__bottom">
                     <p class="footer__copyright">
                         &copy; {{ date('Y') }} Club Informatique U-Auben. Tous droits réservés.
+                    </p>
+                    <p class="footer__made-with">
+                        Fait avec <i class="fa-solid fa-heart"></i> par les étudiants de U-Auben
                     </p>
                 </div>
             </div>
