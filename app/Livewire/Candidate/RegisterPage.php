@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\CandidateService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -156,7 +157,7 @@ class RegisterPage extends Component
                 $this->redirect(route('candidate.dashboard'), navigate: true);
             });
         } catch (\Exception $e) {
-            session()->flash('error', 'Une erreur est survenue : '.$e->getMessage());
+            session()->flash('error', 'Une erreur est survenue : ' . $e->getMessage());
         }
     }
 

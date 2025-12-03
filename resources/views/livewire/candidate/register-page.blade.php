@@ -120,7 +120,7 @@
                     <!-- Photo officielle -->
                     <div class="form-group">
                         <label for="photoOfficielle" class="form-group__label">
-                            Photo officielle (à renseigner après acceptation)
+                            Photo officielle (optionnelle)
                         </label>
                         <input type="file" id="photoOfficielle" wire:model="photoOfficielle"
                             accept="image/jpeg,image/png" class="form-group__file" disabled>
@@ -130,7 +130,7 @@
                     <!-- Programme PDF -->
                     <div class="form-group">
                         <label for="programme" class="form-group__label">
-                            Programme (PDF, à renseigner après acceptation)
+                            Programme (PDF, optionnel)
                         </label>
                         <input type="file" id="programme" wire:model="programme" accept="application/pdf"
                             class="form-group__file" disabled>
