@@ -268,7 +268,7 @@ class RegisterPage extends Component
             $this->currentStep = 1;
             // On reste sur la même page, pas de redirection
         } catch (\Exception $e) {
-            session()->flash('error', 'Une erreur est survenue : '.$e->getMessage());
+            session()->flash('error', 'Une erreur est survenue : ' . $e->getMessage());
         }
     }
 
