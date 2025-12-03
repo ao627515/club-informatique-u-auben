@@ -84,30 +84,11 @@
                         </div>
 
                         <div class="candidate-register__form-row candidate-register__form-row--two-cols">
-                            <!-- Mot de passe -->
-                            <div class="form-group">
-                                <label for="password" class="form-group__label form-group__label--required">
-                                    Mot de passe
-                                </label>
-                                <input type="password" id="password" wire:model="password"
-                                    class="form-group__input @error('password') form-group__input--error @enderror">
-                                @error('password')
-                                    <span class="form-group__error">{{ $message }}</span>
-                                @enderror
-                                <p class="form-group__help">Minimum 8 caractères</p>
-                            </div>
-
-                            <!-- Confirmation mot de passe -->
-                            <div class="form-group">
-                                <label for="password_confirmation" class="form-group__label form-group__label--required">
-                                    Confirmer le mot de passe
-                                </label>
-                                <input type="password" id="password_confirmation" wire:model="password_confirmation"
-                                    class="form-group__input">
-                            </div>
+                            <!-- ...rien, suppression des champs mot de passe... -->
                         </div>
 
                         <!-- Photo utilisateur -->
+                        <!-- Photo de profil (optionnelle) conservée -->
                         <div class="form-group">
                             <label for="photoUtilisateur" class="form-group__label">
                                 Photo de profil (optionnelle)
@@ -138,49 +119,22 @@
 
                     <!-- Photo officielle -->
                     <div class="form-group">
-                        <label for="photoOfficielle" class="form-group__label form-group__label--required">
-                            Photo officielle
+                        <label for="photoOfficielle" class="form-group__label">
+                            Photo officielle (à renseigner après acceptation)
                         </label>
                         <input type="file" id="photoOfficielle" wire:model="photoOfficielle"
-                            accept="image/jpeg,image/png" class="form-group__file">
-                        @error('photoOfficielle')
-                            <span class="form-group__error">{{ $message }}</span>
-                        @enderror
-                        <p class="form-group__help">Format: JPEG ou PNG, Max: 2 Mo</p>
-
-                        @if ($photoOfficielle)
-                            <div class="candidate-register__photo-preview">
-                                <img src="{{ $photoOfficielle->temporaryUrl() }}" alt="Aperçu photo"
-                                    class="candidate-register__photo-preview-img">
-                            </div>
-                        @endif
-
-                        <div wire:loading wire:target="photoOfficielle" class="candidate-register__file-info">
-                            ⏳ Téléchargement en cours...
-                        </div>
+                            accept="image/jpeg,image/png" class="form-group__file" disabled>
+                        <p class="form-group__help">À renseigner sur le dashboard candidat après acceptation.</p>
                     </div>
 
                     <!-- Programme PDF -->
                     <div class="form-group">
-                        <label for="programme" class="form-group__label form-group__label--required">
-                            Programme (PDF)
+                        <label for="programme" class="form-group__label">
+                            Programme (PDF, à renseigner après acceptation)
                         </label>
                         <input type="file" id="programme" wire:model="programme" accept="application/pdf"
-                            class="form-group__file">
-                        @error('programme')
-                            <span class="form-group__error">{{ $message }}</span>
-                        @enderror
-                        <p class="form-group__help">Format: PDF, Max: 5 Mo</p>
-
-                        @if ($programme)
-                            <div class="candidate-register__file-info">
-                                📄 {{ $programme->getClientOriginalName() }}
-                            </div>
-                        @endif
-
-                        <div wire:loading wire:target="programme" class="candidate-register__file-info">
-                            ⏳ Téléchargement en cours...
-                        </div>
+                            class="form-group__file" disabled>
+                        <p class="form-group__help">À renseigner sur le dashboard candidat après acceptation.</p>
                     </div>
 
                     <!-- Vision -->

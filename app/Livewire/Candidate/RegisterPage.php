@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Services\CandidateService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -59,8 +58,7 @@ class RegisterPage extends Component
     protected function rules(): array
     {
         $rules = [
-            'photoOfficielle' => 'required|image|mimes:jpeg,png|max:2048',
-            'programme' => 'required|file|mimes:pdf|max:5120',
+            // Photo officielle et programme deviennent optionnels
             'vision' => 'required|string|min:100|max:2000',
             'motivations' => 'required|string|min:50|max:1000',
         ];
@@ -72,7 +70,6 @@ class RegisterPage extends Component
                 'nom' => 'required|string|max:100',
                 'prenom' => 'required|string|max:100',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8|confirmed',
                 'photoUtilisateur' => 'nullable|image|mimes:jpeg,png|max:2048',
             ]);
         }
@@ -93,9 +90,7 @@ class RegisterPage extends Component
             'email.required' => "L'email est obligatoire.",
             'email.email' => "L'email doit être une adresse valide.",
             'email.unique' => 'Cet email est déjà utilisé.',
-            'password.required' => 'Le mot de passe est obligatoire.',
-            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
-            'password.confirmed' => 'Les mots de passe ne correspondent pas.',
+            // Suppression des messages liés au mot de passe
             'photoUtilisateur.image' => 'Le fichier doit être une image.',
             'photoUtilisateur.mimes' => 'La photo doit être au format JPEG ou PNG.',
             'photoUtilisateur.max' => 'La photo ne doit pas dépasser 2 Mo.',
@@ -127,14 +122,13 @@ class RegisterPage extends Component
             DB::transaction(function () use ($candidateService) {
                 $user = Auth::user();
 
-                // Si l'utilisateur n'est pas authentifié, créer le compte
+                // Si l'utilisateur n'est pas authentifié, créer le compte sans mot de passe
                 if (! $user) {
                     $user = User::create([
                         'matricule' => $this->matricule,
                         'nom' => $this->nom,
                         'prenom' => $this->prenom,
                         'email' => $this->email,
-                        'password' => Hash::make($this->password),
                         'photo_path' => $this->photoUtilisateur ? $this->photoUtilisateur->store('photos', 'public') : null,
                         'email_verified_at' => now(),
                     ]);
@@ -146,18 +140,18 @@ class RegisterPage extends Component
                     Auth::login($user);
                 }
 
-                // Créer la candidature
+                // Créer la candidature sans photo officielle ni programme
                 $candidateData = new CandidateData(
                     userId: $user->id,
-                    photoOfficielle: $this->photoOfficielle,
-                    programme: $this->programme,
+                    photoOfficielle: null,
+                    programme: null,
                     vision: $this->vision,
                     motivations: $this->motivations
                 );
 
                 $candidateService->createCandidate($candidateData, $user);
 
-                session()->flash('success', 'Votre candidature a été soumise avec succès ! Elle sera examinée par un administrateur.');
+                session()->flash('success', 'Votre candidature a été soumise avec succès ! Elle sera examinée par un administrateur. Vous recevrez un mot de passe par email si votre candidature est retenue.');
 
                 $this->redirect(route('candidate.dashboard'), navigate: true);
             });
