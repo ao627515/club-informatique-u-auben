@@ -13,22 +13,24 @@ class RegisterPage extends Component
     use WithFileUploads;
 
     public $photoOfficielle;
-
     public $programme;
-
     public $vision;
-
     public $motivations;
 
     public function mount(CandidateService $candidateService): void
     {
+        // Vérifier que l'utilisateur est authentifié
+        if (!Auth::check()) {
+            abort(403, 'Vous devez être connecté pour accéder à cette page.');
+        }
+
         // Vérifier si l'utilisateur a déjà une candidature
         if ($candidateService->userHasCandidate(Auth::id())) {
             $this->redirect(route('candidate.dashboard'), navigate: true);
         }
 
         // Vérifier si l'utilisateur a le rôle 'user'
-        if (! Auth::user()->hasRole('user')) {
+        if (!Auth::user()->hasRole('user')) {
             abort(403, 'Seuls les utilisateurs peuvent soumettre une candidature.');
         }
     }
