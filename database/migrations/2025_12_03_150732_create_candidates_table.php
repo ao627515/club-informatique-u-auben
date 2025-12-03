@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('photo_officielle_path');
-            $table->string('programme_path');
+            $table->string('photo_officielle_path')->nullable();
+            $table->string('programme_path')->nullable();
             $table->text('vision');
             $table->text('motivations');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

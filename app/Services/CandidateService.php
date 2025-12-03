@@ -34,16 +34,20 @@ class CandidateService
         'status' => 'pending',
       ]);
 
-      $candidate->addMedia($data->photoOfficielle)
-        ->toMediaCollection('photo_officielle');
+      // Ajout des fichiers si fournis
+      if ($data->photoOfficielle) {
+        $candidate->addMedia($data->photoOfficielle)
+          ->toMediaCollection('photo_officielle');
+        $candidate->photo_officielle_path = $candidate->getFirstMediaPath('photo_officielle');
+      }
 
-      $candidate->addMedia($data->programme)
-        ->toMediaCollection('programme');
+      if ($data->programme) {
+        $candidate->addMedia($data->programme)
+          ->toMediaCollection('programme');
+        $candidate->programme_path = $candidate->getFirstMediaPath('programme');
+      }
 
-      $candidate->update([
-        'photo_officielle_path' => $candidate->getFirstMediaPath('photo_officielle'),
-        'programme_path' => $candidate->getFirstMediaPath('programme'),
-      ]);
+      $candidate->save();
 
       activity()
         ->causedBy($user)
